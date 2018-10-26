@@ -41,5 +41,13 @@ WORKDIR ${HOME}
             dockerfile.write("    %s \\\n" % p)
         dockerfile.write(tail)
     
+    with open("docker_build.sh", "w") as scriptfile:
+        scriptfile.write("#!/bin/sh\ndocker build -t %s -f Dockerfile ." % yl['name'])
+    os.chmod("docker_build.sh", 0o755)
+    
+    with open("docker_run.sh", "w") as scriptfile:
+        scriptfile.write("#!/bin/sh\ndocker run --rm -p 8888:8888 %s" % yl['name'])
+    os.chmod("docker_run.sh", 0o755)
+        
 if __name__ == "__main__":
     main()
