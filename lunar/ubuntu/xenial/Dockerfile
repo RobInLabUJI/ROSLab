@@ -13,7 +13,7 @@ RUN apt-get update && apt-get -yq dist-upgrade \
 RUN pip3 install jupyterlab bash_kernel \
  && python3 -m bash_kernel.install
 
-RUN pip install ipykernel ipython matplotlib \
+RUN pip install ipykernel==4.10.0 ipython==5.8.0 matplotlib==2.2.3 \
  && python -m ipykernel install
 
 ENV SHELL=/bin/bash \

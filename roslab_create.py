@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 import os, subprocess, sys, yaml
 
+distros = ['kinetic', 'lunar', 'melodic']
+
 def main():
     if len(sys.argv) != 2:
         print("Usage: %s <folder>" % sys.argv[0])
@@ -17,8 +19,12 @@ def main():
     except FileNotFoundError:
         print("File 'roslab.yaml' not found in folder '%s'" % sys.argv[1])
         sys.exit(1)
-        
-    head = """FROM robinlab/roslab
+    distro = yl['distro']
+    if not distro in distros:
+        print('Distro %s not supported.' % distro)
+        sys.exit(1)
+    
+    head = "FROM roslab/roslab:" + distro + """
 
 USER root
 
