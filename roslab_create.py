@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import os, subprocess, sys, yaml
-
+import os.path
+    
 distros = ['kinetic', 'lunar', 'melodic']
 
 def main():
@@ -54,6 +55,9 @@ WORKDIR ${HOME}
     with open("docker_run.sh", "w") as scriptfile:
         scriptfile.write("#!/bin/sh\ndocker run --rm -p 8888:8888 %s" % yl['name'])
     os.chmod("docker_run.sh", 0o755)
-        
+    
+    if os.path.isfile("README.md"):
+        os.system("notedown README.md > README.ipynb")
+    
 if __name__ == "__main__":
     main()

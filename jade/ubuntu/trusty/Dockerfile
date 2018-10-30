@@ -6,14 +6,20 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && apt-get -yq dist-upgrade \
  && apt-get install -yq --no-install-recommends \
 	locales python-pip \
-	python3-pip python3-setuptools \
+	python3-pip python3-setuptools python3-dev \
+	ipython3 ipython3-notebook \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 
-RUN pip3 install jupyterlab bash_kernel \
- && python3 -m bash_kernel.install
+#RUN pip3 install --upgrade pip
 
-RUN pip install ipykernel ipython matplotlib \
+#RUN python3 -m pip install jupyter
+
+#RUN pip3 install bash_kernel \
+# && python3 -m bash_kernel.install
+
+#RUN pip install ipykernel==4.10.0 ipython==5.8.0 matplotlib==2.2.3 \
+RUN pip install ipykernel==4.10.0 ipython==5.8.0 \
  && python -m ipykernel install
 
 ENV SHELL=/bin/bash \
