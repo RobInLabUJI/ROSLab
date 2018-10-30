@@ -1,4 +1,4 @@
-FROM ros:melodic-ros-base
+FROM ros:melodic-ros-base-bionic
 
 USER root
 
