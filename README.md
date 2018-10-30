@@ -1,5 +1,39 @@
 # ROSLab
 
-[![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/RobInLabUJI/ROSLab/master?urlpath=lab)
+## JupyterLab for ROS
 
-JupyterLab for ROS
+ROSLab is a JupyterLab environment for your ROS repository. 
+It automatically creates a dockerfile
+from a configuration YAML file with the following information:
+
+- name: the name of the docker image
+- repo: the URL address of the repository
+- distro: the ROS distribution
+- packages: a list of debian packages to be installed in the docker image
+
+## Prerequisited
+
+Docker
+
+## Usage
+
+```
+$ docker run --rm -v <REPOSITORY_FOLDER>:/project:rw roslab/create
+```
+
+The command will create the `Dockerfile` in your repository folder,
+and convert the markdown file `README.md` into a notebook file name
+`README.ipynb`.
+
+## Try ROSLab
+
+You can try the JupyterLab environment in a fresh ROS install:
+
+1. Install docker
+
+2. Run a ROSLab image with:
+```
+$ docker run --rm -p 8888:8888 roslab/roslab:melodic
+```
+
+3. Open http://localhost:8888 in your browser
