@@ -2,7 +2,8 @@
 
 ## JupyterLab for ROS
 
-ROSLab is a JupyterLab environment for your ROS repository. 
+ROSLab is a [JupyterLab](https://jupyterlab.readthedocs.io/en/stable/)
+environment for your [ROS](http://www.ros.org/) repository. 
 It automatically creates a dockerfile
 from a configuration YAML file with the following information:
 
@@ -11,9 +12,9 @@ from a configuration YAML file with the following information:
 - distro: the ROS distribution
 - packages: a list of debian packages to be installed in the docker image
 
-## Prerequisited
+## Prerequisites
 
-Docker
+[Docker](https://www.docker.com/)
 
 ## Usage
 
