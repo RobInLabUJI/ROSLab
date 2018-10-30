@@ -23,8 +23,14 @@ $ docker run --rm -v <REPOSITORY_FOLDER>:/project:rw roslab/create
 ```
 
 The command will create the `Dockerfile` in your repository folder,
-and convert the markdown file `README.md` into a notebook file name
+and convert the markdown file `README.md` into a notebook file named
 `README.ipynb`.
+
+It will also create two script files `docker_build.sh` and `docker_run.sh`
+for building and running the docker image respectively.
+
+After running the image, connect to JupyterLab by opening this URL 
+in your browser: `http://localhost:8888`
 
 ## Try ROSLab
 
