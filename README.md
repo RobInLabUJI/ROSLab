@@ -44,3 +44,7 @@ $ docker run --rm -p 8888:8888 roslab/roslab:melodic
 ```
 
 3. Open http://localhost:8888 in your browser
+
+Or try it in Binder:
+
+[![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/RobInLabUJI/ROSLab-demo/master)
