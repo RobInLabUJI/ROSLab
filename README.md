@@ -47,4 +47,4 @@ $ docker run --rm -p 8888:8888 roslab/roslab:melodic
 
 Or try it in Binder:
 
-[![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/RobInLabUJI/ROSLab-demo/master)
+[![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/RobInLabUJI/ROSLab-demo/master?urlpath=lab)
