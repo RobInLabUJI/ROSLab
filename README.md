@@ -8,7 +8,6 @@ It automatically creates a dockerfile
 from a configuration YAML file (`roslab.yaml`) with the following information:
 
 - name: the name of the docker image
-- repo: the URL address of the repository
 - distro: the ROS distribution
 - packages: a list of debian packages to be installed in the docker image
 
@@ -36,8 +35,6 @@ in your browser: `http://localhost:8888`
 This is an example of `roslab.yaml`:
 ```
 name: rosin-tutorials
-
-repo: https://github.com/RobInLabUJI/ROSIN-Tutorials.git
 
 distro: melodic
 
