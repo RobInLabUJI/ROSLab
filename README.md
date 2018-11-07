@@ -5,7 +5,7 @@
 ROSLab is a [JupyterLab](https://jupyterlab.readthedocs.io/en/stable/)
 environment for your [ROS](http://www.ros.org/) repository. 
 It automatically creates a dockerfile
-from a configuration YAML file with the following information:
+from a configuration YAML file (`roslab.yaml`) with the following information:
 
 - name: the name of the docker image
 - repo: the URL address of the repository
@@ -22,7 +22,8 @@ from a configuration YAML file with the following information:
 $ docker run --rm -v <REPOSITORY_FOLDER>:/project:rw roslab/create
 ```
 
-The command will create the `Dockerfile` in your repository folder,
+The command will read the file `roslab.yaml` from your repository folder,
+create the `Dockerfile` in the same folder,
 and convert the markdown file `README.md` into a notebook file named
 `README.ipynb`.
 
@@ -32,6 +33,21 @@ for building and running the docker image respectively.
 After running the image, connect to JupyterLab by opening this URL 
 in your browser: `http://localhost:8888`
 
+This is an example of `roslab.yaml`:
+```
+name: rosin-tutorials
+
+repo: https://github.com/RobInLabUJI/ROSIN-Tutorials.git
+
+distro: melodic
+
+packages:
+  - ros-melodic-ros-tutorials
+  - ros-melodic-common-tutorials
+  - xvfb=2:1.19.6-1ubuntu4
+  - x11-apps=7.7+6ubuntu1
+  - netpbm=2:10.0-15.3build1
+```
 ## Try ROSLab
 
 You can try the JupyterLab environment in a fresh ROS install:
