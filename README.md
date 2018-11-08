@@ -56,7 +56,7 @@ You can try the JupyterLab environment in a fresh ROS install:
 $ docker run --rm -p 8888:8888 roslab/roslab:melodic
 ```
 
-3. Open http://localhost:8888 in your browser
+3. Open http://localhost:8888 in your browser (Windows users: you may need to replace `localhost` with `192.168.99.100` or any IP address assigned to your docker machine)
 
 Or try it in Binder:
 
