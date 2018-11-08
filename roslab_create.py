@@ -25,28 +25,45 @@ def main():
         print('Distro %s not supported.' % distro)
         sys.exit(1)
     
-    head = "FROM roslab/roslab:" + distro + """
+    global_head = "FROM roslab/roslab:" + distro + """
 
-USER root
-
-RUN apt-get update \\
+USER root\n
+"""
+    apt_head = """RUN apt-get update \\
  && apt-get install -yq --no-install-recommends \\
 """
 
-    tail = """ && apt-get clean \\
+    apt_tail = """ && apt-get clean \\
  && rm -rf /var/lib/apt/lists/*
+"""
+    if os.path.isfile("package.xml"):
+        mid_section = "\nRUN mkdir -p ${HOME}/catkin_ws/src/" + yl['name'] + \
+            "\nCOPY . ${HOME}/catkin_ws/src/" + yl['name'] + "/." + """
+RUN cd ${HOME}/catkin_ws \\
+ && /bin/bash -c "source /opt/ros/DISTRO/setup.bash && catkin_make"
 
-COPY . ${HOME}
-RUN chown -R ${NB_UID} ${HOME}
+RUN echo "source ~/catkin_ws/devel/setup.bash" >> ${HOME}/.bashrc\n
+"""
+        mid_section = mid_section.replace('DISTRO', distro)
+    else:
+        mid_section = """
+COPY . ${HOME}\n
+"""
+
+    global_tail = """RUN chown -R ${NB_UID} ${HOME}
 
 USER ${NB_USER}
 WORKDIR ${HOME}
 """
+
     with open("Dockerfile", "w") as dockerfile:
-        dockerfile.write(head)
+        dockerfile.write(global_head)
+        dockerfile.write(apt_head)
         for p in yl['packages']:
             dockerfile.write("    %s \\\n" % p)
-        dockerfile.write(tail)
+        dockerfile.write(apt_tail)
+        dockerfile.write(mid_section)
+        dockerfile.write(global_tail)
     
     with open("docker_build.sh", "w") as scriptfile:
         scriptfile.write("#!/bin/sh\ndocker build -t %s -f Dockerfile ." % yl['name'])
