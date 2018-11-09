@@ -5,7 +5,7 @@ USER root
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && apt-get -yq dist-upgrade \
  && apt-get install -yq --no-install-recommends \
-	locales python-pip \
+	locales python-pip python-catkin-tools \
 	python3-pip python3-setuptools \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
