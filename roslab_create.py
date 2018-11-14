@@ -4,6 +4,8 @@ import os.path
     
 distros = ['kinetic', 'lunar', 'melodic']
 
+build_methods = {'catkin_make': 'catkin_make', 'catkin_build': 'catkin build'}
+
 def getDirectoryList(path):
     directoryList = []
 
@@ -40,7 +42,9 @@ def source_commands(list_pack):
  && cmake ../ \\
  && make -j4 install \\
 """
-            s += " && rm -fr /" + p['name'] + "\n"
+        else:
+            print("Warning: build method '%s' not defined for package '%s'" % (p['build'], p['name']))
+        s += " && rm -fr /" + p['name'] + "\n"
     return s
     
 def main():
@@ -64,6 +68,16 @@ def main():
         print('Distro %s not supported.' % distro)
         sys.exit(1)
     
+    if 'runtime' in yl.keys():
+        runtime = yl['runtime']
+        if runtime == 'nvidia':
+            distro += '-' + runtime
+        else:
+            print("Warning: unknown runtime '%s', ignoring." % runtime)
+            runtime = None
+    else:
+        runtime = None
+
     global_head = "FROM roslab/roslab:" + distro + """
 
 USER root\n
@@ -80,15 +94,17 @@ USER root\n
         mid_section = "\nRUN mkdir -p ${HOME}/catkin_ws/src/" + yl['name'] + \
             "\nCOPY . ${HOME}/catkin_ws/src/" + yl['name'] + "/." + """
 RUN cd ${HOME}/catkin_ws \\
+ && mv src/""" + yl['name'] + """/README.ipynb .. \\
  && apt-get update \\
  && /bin/bash -c "source /opt/ros/DISTRO/setup.bash && rosdep update && rosdep install --as-root apt:false --from-paths src --ignore-src -r -y" \\
  && apt-get clean \\
  && rm -rf /var/lib/apt/lists/* \\
- && /bin/bash -c "source /opt/ros/DISTRO/setup.bash && catkin build"
+ && /bin/bash -c "source /opt/ros/DISTRO/setup.bash && BUILD"
 
 RUN echo "source ~/catkin_ws/devel/setup.bash" >> ${HOME}/.bashrc\n
 """
         mid_section = mid_section.replace('DISTRO', distro)
+        mid_section = mid_section.replace('BUILD', build_methods[yl['build']])
     else:
         mid_section = """
 COPY . ${HOME}\n
@@ -116,10 +132,43 @@ WORKDIR ${HOME}
         scriptfile.write("#!/bin/sh\ndocker build -t %s -f Dockerfile ." % yl['name'])
     os.chmod("docker_build.sh", 0o755)
     
+    vol_string = ""
+    if 'volume' in yl.keys():
+        for v in yl['volume']:
+            vol_string += '--volume="%s:%s:%s" ' % (v['host_path'], v['container_path'], v['options'])
+
     with open("docker_run.sh", "w") as scriptfile:
-        scriptfile.write("#!/bin/sh\ndocker run --rm -p 8888:8888 %s" % yl['name'])
+        if not runtime:
+            scriptfile.write("#!/bin/sh\ndocker run --rm -p 8888:8888 " + vol_string + " %s" % yl['name'])
+        elif runtime=='nvidia':
+            scriptfile.write("""#!/bin/sh
+XAUTH=/tmp/.docker.xauth
+if [ ! -f $XAUTH ]
+then
+    xauth_list=$(xauth nlist :0 | sed -e 's/^..../ffff/')
+    if [ ! -z "$xauth_list" ]
+    then
+        echo $xauth_list | xauth -f $XAUTH nmerge -
+    else
+        touch $XAUTH
+    fi
+    chmod a+r $XAUTH
+fi
+
+docker run --rm \\
+    --env="DISPLAY" \\
+    --env="QT_X11_NO_MITSHM=1" \\
+    --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" \\
+    -env="XAUTHORITY=$XAUTH" \\
+    --volume="$XAUTH:$XAUTH" \\
+    --runtime=nvidia \\
+""")
+            scriptfile.write("    -p 8888:8888 \\\n    " + vol_string + "\\\n    %s" % yl['name'])
     os.chmod("docker_run.sh", 0o755)
     
+    with open(".dockerignore", "w") as ignorefile:
+        ignorefile.write(".dockerignore\nDockerfile\nroslab.yaml\ndocker_build.sh\ndocker_run.sh\n")
+
     if os.path.isfile("README.md"):
         os.system("notedown README.md > README.ipynb")
     
