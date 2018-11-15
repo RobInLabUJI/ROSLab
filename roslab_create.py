@@ -27,11 +27,12 @@ def getDirectoryList(path):
 def source_commands(list_pack):
     s = ''
     for p in list_pack:
-        s += """\nRUN apt-get update \\
+        if 'depends' in p.keys() and p['depends']:
+            s += """\nRUN apt-get update \\
   && apt-get install -yq --no-install-recommends \\"""
-        for d in p['depends']:
-            s += '\n    ' + d + ' \\'
-        s += """
+            for d in p['depends']:
+                s += '\n    ' + d + ' \\'
+            s += """
  && apt-get clean \\
  && rm -rf /var/lib/apt/lists/*
 """
@@ -42,6 +43,11 @@ def source_commands(list_pack):
  && cmake ../ \\
  && make -j4 install \\
 """
+        elif p['build'] == 'catkin_build':
+            s += " && mkdir -p ${HOME}/catkin_ws/src \\\n && cp -R /" + p['name'] + " ${HOME}/catkin_ws/src/. \\" + """
+ && /bin/bash -c "source /opt/ros/kinetic/setup.bash && catkin build" \\
+"""
+
         else:
             print("Warning: build method '%s' not defined for package '%s'" % (p['build'], p['name']))
         s += " && rm -fr /" + p['name'] + "\n"
