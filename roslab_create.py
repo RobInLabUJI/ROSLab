@@ -24,7 +24,7 @@ def getDirectoryList(path):
 
     return directoryList
 
-def source_commands(list_pack):
+def source_commands(list_pack, distro):
     s = ''
     for p in list_pack:
         if 'depends' in p.keys() and p['depends']:
@@ -45,12 +45,28 @@ def source_commands(list_pack):
 """
         elif p['build'] == 'catkin_build':
             s += " && mkdir -p ${HOME}/catkin_ws/src \\\n && cp -R /" + p['name'] + " ${HOME}/catkin_ws/src/. \\" + """
- && /bin/bash -c "source /opt/ros/kinetic/setup.bash && catkin build" \\
+ && cd ${HOME}/catkin_ws \\
+ && apt-get update \\
+ && /bin/bash -c "source /opt/ros/DISTRO/setup.bash && rosdep update && rosdep install --as-root apt:false --from-paths src --ignore-src -r -y" \\
+ && apt-get clean \\
+ && rm -rf /var/lib/apt/lists/* \\
+ && /bin/bash -c "source /opt/ros/DISTRO/setup.bash && catkin build" \\
+"""
+
+        elif p['build'] == 'catkin_make':
+            s += " && mkdir -p ${HOME}/catkin_ws/src \\\n && cp -R /" + p['name'] + " ${HOME}/catkin_ws/src/. \\" + """
+ && cd ${HOME}/catkin_ws \\
+ && apt-get update \\
+ && /bin/bash -c "source /opt/ros/DISTRO/setup.bash && rosdep update && rosdep install --as-root apt:false --from-paths src --ignore-src -r -y" \\
+ && apt-get clean \\
+ && rm -rf /var/lib/apt/lists/* \\
+ && /bin/bash -c "source /opt/ros/DISTRO/setup.bash && catkin_make" \\
 """
 
         else:
             print("Warning: build method '%s' not defined for package '%s'" % (p['build'], p['name']))
         s += " && rm -fr /" + p['name'] + "\n"
+        s = s.replace("DISTRO", distro)
     return s
     
 def main():
@@ -131,7 +147,7 @@ WORKDIR ${HOME}
                 dockerfile.write("    %s \\\n" % p)
             dockerfile.write(apt_tail)
         if 'source' in yl.keys():
-            dockerfile.write(source_commands(yl['source']))
+            dockerfile.write(source_commands(yl['source'], distro))
         dockerfile.write(mid_section)
         dockerfile.write(global_tail)
     
