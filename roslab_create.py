@@ -68,17 +68,18 @@ def main():
         print('Distro %s not supported.' % distro)
         sys.exit(1)
     
+    base_image = distro
     if 'runtime' in yl.keys():
         runtime = yl['runtime']
         if runtime == 'nvidia':
-            distro += '-' + runtime
+            base_image += '-' + runtime
         else:
             print("Warning: unknown runtime '%s', ignoring." % runtime)
             runtime = None
     else:
         runtime = None
 
-    global_head = "FROM roslab/roslab:" + distro + """
+    global_head = "FROM roslab/roslab:" + base_image + """
 
 USER root\n
 """
