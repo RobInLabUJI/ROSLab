@@ -141,11 +141,26 @@ WORKDIR ${HOME}
 
     with open("Dockerfile", "w") as dockerfile:
         dockerfile.write(global_head)
+        if 'repos' in yl.keys():
+            dockerfile.write("""RUN apt-get update \\
+ && apt-get install -yq --no-install-recommends \\
+    software-properties-common \\
+ && apt-get clean \\
+ && rm -rf /var/lib/apt/lists/*
+""")
+            for r in yl['repos']:
+                dockerfile.write("RUN apt-add-repository %s\n" % r)
         if 'packages' in yl.keys():
             dockerfile.write(apt_head)
             for p in yl['packages']:
                 dockerfile.write("    %s \\\n" % p)
             dockerfile.write(apt_tail)
+        if 'python-packages' in yl.keys():
+            pip_string = "RUN pip install "
+            for p in yl['python-packages']:
+                pip_string += p + " "
+            pip_string += "\n"
+            dockerfile.write(pip_string)
         if 'source' in yl.keys():
             dockerfile.write(source_commands(yl['source'], distro))
         dockerfile.write(mid_section)
