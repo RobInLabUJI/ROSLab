@@ -8,9 +8,21 @@ It automatically creates a dockerfile
 from a configuration YAML file (`roslab.yaml`) with the following information:
 
 - name: the name of the docker image
-- distro: the ROS distribution
-- packages: a list of debian packages to be installed in the docker image
-
+- distro: `kinetic` | `lunar` | `melodic`
+- build: `catkin_make` | `catkin_build`
+- runtime (optional): `nvidia` (for 3D acceleration)
+- packages (optional): a list of debian packages to be installed in the docker image
+- python-packages (optional): a list of pip packages to be installed in the docker image
+- source (optional): a list of source packages to be downloaded, compiled, and installed in the docker image
+    - name: name of the package
+    - repo: git repository
+    - depends (optional): list of debian packages with dependencies for this package
+    - build: `cmake` | `catkin_make` 
+- volume (optional): list of directories to be mounted in the docker image
+    - host_path: full path in the host
+    - container_path: full path in the container
+    - options: `ro` | `rw`
+    
 ## Prerequisites
 
 [Docker](https://www.docker.com/)
