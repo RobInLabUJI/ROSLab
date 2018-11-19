@@ -208,7 +208,25 @@ docker run --rm \\
         ignorefile.write(".dockerignore\nDockerfile\nroslab.yaml\ndocker_build.sh\ndocker_run.sh\n")
 
     if os.path.isfile("README.md"):
-        os.system("notedown README.md > README.ipynb")
+        os.system("notedown README.md | head -n -4 > README.ipynb")
+        with open("README.ipynb", "a") as myfile:
+            myfile.write(""" "metadata": {
+  "kernelspec": {
+   "display_name": "Bash",
+   "language": "bash",
+   "name": "bash"
+  },
+  "language_info": {
+   "codemirror_mode": "shell",
+   "file_extension": ".sh",
+   "mimetype": "text/x-sh",
+   "name": "bash"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}
+""")
     
 if __name__ == "__main__":
     main()
