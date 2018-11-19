@@ -70,15 +70,12 @@ packages:
 #### [Example with volume and source package](https://github.com/ICRA-2018/VINS-Mono/blob/master/roslab.yaml)
 ```
 name: vins-mono
-
 distro: kinetic
-
 build: catkin_make
-
 runtime: nvidia
 
 volume:
-  - host_path: /home/ecervera/Desktop/ICRA-2018/EuRoC_MAV_Dataset
+  - host_path: /Data/EuRoC_MAV_Dataset
     container_path: /EuRoC_MAV_Dataset
     options: ro
 
