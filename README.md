@@ -42,21 +42,63 @@ It will also create two script files `docker_build.sh` and `docker_run.sh`
 for building and running the docker image respectively.
 
 After running the image, connect to JupyterLab by opening this URL 
-in your browser: `http://localhost:8888`
+in your browser: `http://localhost:8888/lab/tree/README.ipynb`
 
-This is an example of `roslab.yaml`:
+## Examples
+
+#### [Minimalistic example](https://github.com/ICRA-2018/raspimouse_ros_2/blob/master/roslab.yaml)
 ```
-name: rosin-tutorials
+name: raspimouse-ros
+distro: kinetic
+build: catkin_make
+```
 
-distro: melodic
+#### [Typical example with Debian packages](https://github.com/ICRA-2018/nanomap_ros/blob/master/roslab.yaml)
+```
+name: nanomap_ros
+distro: kinetic
+build: catkin_make
 
 packages:
-  - ros-melodic-ros-tutorials
-  - ros-melodic-common-tutorials
-  - xvfb=2:1.19.6-1ubuntu4
-  - x11-apps=7.7+6ubuntu1
-  - netpbm=2:10.0-15.3build1
+  - libeigen3-dev
+  - ros-kinetic-cv-bridge
+  - ros-kinetic-image-transport
+  - liborocos-kdl-dev
+  - ros-kinetic-tf2-sensor-msgs
 ```
+
+#### [Example with volume and source package](https://github.com/ICRA-2018/VINS-Mono/blob/master/roslab.yaml)
+```
+name: vins-mono
+
+distro: kinetic
+
+build: catkin_make
+
+runtime: nvidia
+
+volume:
+  - host_path: /home/ecervera/Desktop/ICRA-2018/EuRoC_MAV_Dataset
+    container_path: /EuRoC_MAV_Dataset
+    options: ro
+
+packages:
+  - ros-kinetic-cv-bridge
+  - ros-kinetic-tf
+  - ros-kinetic-message-filters
+  - ros-kinetic-image-transport
+
+source:
+  - name: ceres-solver
+    repo: https://github.com/ceres-solver/ceres-solver.git
+    depends:
+      - libgoogle-glog-dev
+      - libatlas-base-dev
+      - libeigen3-dev
+      - libsuitesparse-dev
+    build: cmake
+```
+
 ## Try ROSLab
 
 You can try the JupyterLab environment in a fresh ROS install:
