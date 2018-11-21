@@ -27,6 +27,8 @@ from a configuration YAML file (`roslab.yaml`) with the following information:
 
 [Docker](https://www.docker.com/)
 
+[nvidia-docker 2.0](https://github.com/nvidia/nvidia-docker/wiki/Installation-(version-2.0)) For running an image with the `nvidia` runtime.
+
 ## Usage
 
 ```
