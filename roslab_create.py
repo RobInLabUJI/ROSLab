@@ -166,9 +166,9 @@ WORKDIR ${HOME}
         dockerfile.write(mid_section)
         dockerfile.write(global_tail)
         if 'custom' in yl.keys():
-			for c in yl['custom']:
-				run_string = "RUN " + c + "\n"
-				dockerfile.write(run_string)
+            for c in yl['custom']:
+                run_string = "RUN " + c + "\n"
+                dockerfile.write(run_string)
     
     with open("docker_build.sh", "w") as scriptfile:
         scriptfile.write("#!/bin/sh\ndocker build -t %s -f Dockerfile ." % yl['name'])
