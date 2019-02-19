@@ -4,6 +4,6 @@ RUN pip install pyyaml notedown
 
 RUN mkdir /project
 
-ADD roslab_create.py /
+ADD components roslab_create.py /
 
 CMD [ "python", "roslab_create.py", "/project"]

@@ -1,7 +1,97 @@
 #!/usr/bin/env python
-import os, subprocess, sys, yaml
+import os, sys, yaml
 import os.path
-    
+
+PROJECT_DIR  = '/project'
+PROJECT_FILE = 'roslab.yaml'
+DOCKER_FILE  = 'roslab.dockerfile'
+BUILD_FILE   = 'roslab_build.sh'
+RUN_FILE     = 'roslab_run.sh'
+
+def main():
+    os.chdir(PROJECT_DIR)
+    yaml_file = read_yaml_file()
+    write_docker_file(yaml_file)
+    write_build_script(yaml_file)
+    write_run_script(yaml_file)
+    write_docker_ignore()
+    write_readme_notebook()
+
+def read_yaml_file():
+    try:
+        with open(PROJECT_FILE, 'r') as stream:
+            try:
+                yaml_file = yaml.load(stream)
+            except yaml.YAMLError as e:
+                print(e)
+                sys.exit(1)
+    except FileNotFoundError:
+        print("File '%s' not found in folder '%s'" % (PROJECT_FILE, PROJECT_DIR))
+        sys.exit(1)
+    return yaml_file
+
+def write_docker_file(yaml_file):
+    try:
+        base = yaml_file['base']
+        if 'ubuntu' in base.keys():
+        import components.ubuntu as ubuntu
+        try:
+            version = base['ubuntu']
+            ubuntu.write(DOCKER_FILE, version)
+        except KeyError as e:
+            print("Key %s not found in file %s" % (e, PROJECT_FILE) )
+            sys.exit(1)
+    except KeyError as e:
+        print("Key %s not found in file %s" % (e, PROJECT_FILE) )
+        sys.exit(1)
+
+def write_build_script(yaml_file):
+    pass
+
+def write_run_script(yaml_file):
+    pass
+
+DOCKER_IGNORE_FILE = ".dockerignore"
+
+DOCKER_IGNORE_CONTENTS = """README.md
+%s
+%s
+%s
+%s
+%s
+""" % (DOCKER_IGNORE_FILE, PROJECT_FILE, DOCKER_FILE, BUILD_FILE, RUN_FILE)
+
+def write_docker_ignore():
+    with open(DOCKER_IGNORE_FILE, "w") as ignorefile:
+        ignorefile.write(DOCKER_IGNORE_CONTENTS)
+
+NOTEBOOK_TAIL = """
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Bash",
+   "language": "bash",
+   "name": "bash"
+  },
+  "language_info": {
+   "codemirror_mode": "shell",
+   "file_extension": ".sh",
+   "mimetype": "text/x-sh",
+   "name": "bash"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}
+"""
+
+def write_readme_notebook():
+    if os.path.isfile("README.md"):
+        os.system("notedown README.md | head -n -4 > README.ipynb")
+        with open("README.ipynb", "a") as myfile:
+            myfile.write(NOTEBOOK_TAIL)
+
+
+
 distros = ['kinetic', 'lunar', 'melodic']
 
 build_methods = {'catkin_make': 'catkin_make', 'catkin_build': 'catkin build'}
@@ -69,7 +159,7 @@ def source_commands(list_pack, distro):
         s = s.replace("DISTRO", distro)
     return s
     
-def main():
+def old_main():
     if len(sys.argv) != 2:
         print("Usage: %s <folder>" % sys.argv[0])
         sys.exit(1)
