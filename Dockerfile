@@ -1,9 +1,11 @@
-FROM python:3
+FROM python:3-alpine
 
 RUN pip install pyyaml notedown
 
 RUN mkdir /project
 
-ADD components roslab_create.py /
+ADD roslab_create.py /
+
+COPY components /components
 
 CMD [ "python", "roslab_create.py", "/project"]

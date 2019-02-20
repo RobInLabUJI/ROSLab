@@ -34,22 +34,39 @@ def write_docker_file(yaml_file):
     try:
         base = yaml_file['base']
         if 'ubuntu' in base.keys():
-        import components.ubuntu as ubuntu
-        try:
+            import components.ubuntu
             version = base['ubuntu']
-            ubuntu.write(DOCKER_FILE, version)
-        except KeyError as e:
-            print("Key %s not found in file %s" % (e, PROJECT_FILE) )
-            sys.exit(1)
+            components.ubuntu.write(DOCKER_FILE, version)
+        import components.jupyterlab
+        components.jupyterlab.write(DOCKER_FILE)
+        if 'ros' in base.keys():
+            import components.ros
+            version = base['ros']
+            components.ros.write(DOCKER_FILE, version)
+            components.ros.entry_point()
+        import components.copy
+        components.copy.write(DOCKER_FILE)
+        import components.tail
+        components.tail.write(DOCKER_FILE)
     except KeyError as e:
         print("Key %s not found in file %s" % (e, PROJECT_FILE) )
         sys.exit(1)
 
+BUILD_SCRIPT = """#!/bin/sh
+docker build -f %s -t %s ."""
+
 def write_build_script(yaml_file):
-    pass
+    with open(BUILD_FILE, "w") as scriptfile:
+        scriptfile.write(BUILD_SCRIPT % (DOCKER_FILE, yaml_file['name']))
+    os.chmod(BUILD_FILE, 0o755)
+
+RUN_SCRIPT   = """#!/bin/sh
+docker run --rm -p 8888:8888 %s"""
 
 def write_run_script(yaml_file):
-    pass
+    with open(RUN_FILE, "w") as scriptfile:
+        scriptfile.write(RUN_SCRIPT % (yaml_file['name']))
+    os.chmod(RUN_FILE, 0o755)
 
 DOCKER_IGNORE_FILE = ".dockerignore"
 
@@ -91,6 +108,7 @@ def write_readme_notebook():
             myfile.write(NOTEBOOK_TAIL)
 
 
+################################################################################
 
 distros = ['kinetic', 'lunar', 'melodic']
 
