@@ -33,21 +33,42 @@ def read_yaml_file():
 def write_docker_file(yaml_file):
     try:
         base = yaml_file['base']
+
         if 'ubuntu' in base.keys():
             import components.ubuntu
             version = base['ubuntu']
             components.ubuntu.write(DOCKER_FILE, version)
+
         import components.jupyterlab
         components.jupyterlab.write(DOCKER_FILE)
+
         if 'ros' in base.keys():
             import components.ros
             version = base['ros']
             components.ros.write(DOCKER_FILE, version)
             components.ros.entry_point()
+
+        if 'apt' in yaml_file.keys():
+            import components.apt
+            package_list = yaml_file['apt']
+            components.apt.write(DOCKER_FILE, package_list)
+
+        if 'pip3' in yaml_file.keys():
+            import components.pip3
+            package_list = yaml_file['pip3']
+            components.pip3.write(DOCKER_FILE, package_list)
+
+        if 'pip' in yaml_file.keys():
+            import components.pip
+            package_list = yaml_file['pip']
+            components.pip.write(DOCKER_FILE, package_list)
+
         import components.copy
         components.copy.write(DOCKER_FILE)
+
         import components.tail
         components.tail.write(DOCKER_FILE)
+
     except KeyError as e:
         print("Key %s not found in file %s" % (e, PROJECT_FILE) )
         sys.exit(1)
