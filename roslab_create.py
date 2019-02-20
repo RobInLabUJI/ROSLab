@@ -63,6 +63,13 @@ def write_docker_file(yaml_file):
             package_list = yaml_file['pip']
             components.pip.write(DOCKER_FILE, package_list)
 
+        if 'build' in yaml_file.keys():
+            build_method = yaml_file['build']
+            if build_method == 'catkin_make' or build_method == 'catkin_build':
+                import components.catkin
+                name = yaml_file['name']
+                components.catkin.write(DOCKER_FILE, name, build_method)
+
         import components.copy
         components.copy.write(DOCKER_FILE)
 
