@@ -48,8 +48,8 @@ def write(DOCKER_FILE, package_list):
     for p in package_list:
         if 'depends' in p.keys() and p['depends']:
             pstr = ''
-            for p in p['depends']:
-                pstr += '    ' + p + ' \\\n'
+            for apt_pack in p['depends']:
+                pstr += '    ' + apt_pack + ' \\\n'
             s += DEPENDENCIES % pstr
         s += CLONE % (p['repo'], p['name'], p['name'])
         if p['build'] == 'cmake':

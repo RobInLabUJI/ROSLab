@@ -125,14 +125,18 @@ docker run --rm \\
     --env="XAUTHORITY=$XAUTH" \\
     --volume="$XAUTH:$XAUTH" \\
     --runtime=nvidia \\
-    -p 8888:8888 %s"""
+    %s -p 8888:8888 %s"""
 
 def write_run_script(yaml_file):
+    vol_string = ""
+    if 'volume' in yaml_file.keys():
+        for v in yaml_file['volume']:
+            vol_string += '--volume="%s:%s:%s" ' % (v['host_path'], v['container_path'], v['options'])
     with open(RUN_FILE, "w") as scriptfile:
         if 'opengl' in yaml_file['base'].keys():
-            scriptfile.write(RUN_SCRIPT_OPENGL % (yaml_file['name']))
+            scriptfile.write(RUN_SCRIPT_OPENGL % (vol_string, yaml_file['name']))
         else:
-            scriptfile.write(RUN_SCRIPT % (yaml_file['name']))
+            scriptfile.write(RUN_SCRIPT % (vol_string, yaml_file['name']))
     os.chmod(RUN_FILE, 0o755)
 
 DOCKER_IGNORE_FILE = ".dockerignore"
