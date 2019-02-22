@@ -26,6 +26,7 @@ RUN apt-get update && apt-get install --no-install-recommends -y \\
     python-rosdep \\
     python-rosinstall \\
     python-vcstools \\
+    python-catkin-tools \\
     && rm -rf /var/lib/apt/lists/*
 
 # bootstrap rosdep
