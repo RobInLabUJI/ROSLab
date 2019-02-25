@@ -52,11 +52,6 @@ def write_docker_file(yaml_file):
             components.ros.write(DOCKER_FILE, version)
             components.ros.entry_point()
 
-        #if 'opengl' in base.keys():
-        #    import components.opengl
-        #    version = base['opengl']
-        #    components.opengl.write(DOCKER_FILE, version, base['ubuntu'])
-
         if 'apt' in yaml_file.keys():
             import components.apt
             package_list = yaml_file['apt']
@@ -103,7 +98,7 @@ def write_build_script(yaml_file):
     os.chmod(BUILD_FILE, 0o755)
 
 RUN_SCRIPT   = """#!/bin/sh
-docker run --rm -p 8888:8888 %s"""
+docker run --rm %s -p 8888:8888 %s"""
 
 RUN_SCRIPT_OPENGL = """#!/bin/sh
 XAUTH=/tmp/.docker.xauth
@@ -178,64 +173,6 @@ def write_readme_notebook():
         with open("README.ipynb", "a") as myfile:
             myfile.write(NOTEBOOK_TAIL)
 
-
-################################################################################
-
-def old_main():
-
-
-    with open("docker_run.sh", "w") as scriptfile:
-        if not runtime:
-            scriptfile.write("#!/bin/sh\ndocker run --rm -p 8888:8888 " + vol_string + " %s" % yl['name'])
-        elif runtime=='nvidia':
-            scriptfile.write("""#!/bin/sh
-XAUTH=/tmp/.docker.xauth
-if [ ! -f $XAUTH ]
-then
-    xauth_list=$(xauth nlist :0 | sed -e 's/^..../ffff/')
-    if [ ! -z "$xauth_list" ]
-    then
-        echo $xauth_list | xauth -f $XAUTH nmerge -
-    else
-        touch $XAUTH
-    fi
-    chmod a+r $XAUTH
-fi
-
-docker run --rm \\
-    --env="DISPLAY" \\
-    --env="QT_X11_NO_MITSHM=1" \\
-    --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" \\
-    --env="XAUTHORITY=$XAUTH" \\
-    --volume="$XAUTH:$XAUTH" \\
-    --runtime=nvidia \\
-""")
-            scriptfile.write("    -p 8888:8888 \\\n    " + vol_string + "\\\n    %s" % yl['name'])
-    os.chmod("docker_run.sh", 0o755)
-    
-    with open(".dockerignore", "w") as ignorefile:
-        ignorefile.write(".dockerignore\nDockerfile\nroslab.yaml\ndocker_build.sh\ndocker_run.sh\n")
-
-    if os.path.isfile("README.md"):
-        os.system("notedown README.md | head -n -4 > README.ipynb")
-        with open("README.ipynb", "a") as myfile:
-            myfile.write(""" "metadata": {
-  "kernelspec": {
-   "display_name": "Bash",
-   "language": "bash",
-   "name": "bash"
-  },
-  "language_info": {
-   "codemirror_mode": "shell",
-   "file_extension": ".sh",
-   "mimetype": "text/x-sh",
-   "name": "bash"
-  }
- },
- "nbformat": 4,
- "nbformat_minor": 2
-}
-""")
     
 if __name__ == "__main__":
     main()

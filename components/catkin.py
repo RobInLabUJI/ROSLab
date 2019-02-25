@@ -17,6 +17,7 @@ RUN echo "source ~/catkin_ws/devel/setup.bash" >> ${HOME}/.bashrc
 
 build_string = {'catkin_make': 'catkin_make', 'catkin_build': 'catkin build'}
 
+'''
 def getDirectoryList(path):
     directoryList = []
 
@@ -34,7 +35,7 @@ def getDirectoryList(path):
             directoryList += getDirectoryList(new_path)
 
     return directoryList
-
+'''
 
 def write(DOCKER_FILE, name, build_method):
     with open(DOCKER_FILE, "a") as dockerfile:
