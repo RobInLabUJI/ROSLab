@@ -34,3 +34,10 @@ def write(DOCKER_FILE, version, opengl):
         print("ubuntu: version %s not supported. Options: %s" % (version, versions))
         sys.exit(1)
 
+def canonic_version(version):
+    if version == 'xenial' or version == 16.04:
+        version = '16.04'
+    elif version == 'melodic' or version == 18.04:
+        version = '18.04'
+    return version
+

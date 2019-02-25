@@ -45,25 +45,6 @@ COPY ./ros_entrypoint.sh /
 ENTRYPOINT ["/ros_entrypoint.sh"]
 """
 
-'''
-ROS_CORE_PACKAGE = {'kinetic': 'ros-kinetic-ros-core=1.3.2-0*',
-                    'melodic': 'ros-melodic-ros-core=1.4.1-0*'}
-
-ROS_BASE_PACKAGE = {'kinetic': 'ros-kinetic-ros-base=1.3.2-0*',
-                    'melodic': 'ros-melodic-ros-base=1.4.1-0*'}
-
-ROS_ROBOT_PACKAGE = {'kinetic': 'ros-kinetic-robot=1.3.2-0*',
-                     'melodic': 'ros-melodic-robot=1.4.1-0*'}
-
-ROS_PERCEPTION_PACKAGE = {'kinetic': 'ros-kinetic-perception=1.3.2-0*',
-                          'melodic': 'ros-melodic-perception=1.4.1-0*'}
-
-ROS_DESKTOP_PACKAGE = {'kinetic': 'ros-kinetic-desktop=1.3.2-0*',
-                       'melodic': 'ros-melodic-desktop=1.4.1-0*'}
-
-ROS_DESKTOP_FULL_PACKAGE = {'kinetic': 'ros-kinetic-desktop-full=1.3.2-0*',
-                            'melodic': 'ros-melodic-desktop-full=1.4.1-0*'}
-'''
 PACKAGE_VERSION = {'kinetic': '1.3.2-0*',
                    'melodic': '1.4.1-0*'}
 
@@ -73,20 +54,6 @@ def write(DOCKER_FILE, version):
         config = '-'.join(version.split('-')[1:])
         with open(DOCKER_FILE, "a") as dockerfile:
             dockerfile.write(DOCKER_CORE_CONTENTS % (distro, 'ros-' + version + '=' + PACKAGE_VERSION[distro]))
-        '''
-            if config=='ros-core':
-                dockerfile.write(DOCKER_CORE_CONTENTS % (distro, ROS_CORE_PACKAGE[distro]))
-            elif config=='ros-base':
-                dockerfile.write(DOCKER_CORE_CONTENTS % (distro, ROS_BASE_PACKAGE[distro]))
-            elif config=='robot':
-                dockerfile.write(DOCKER_CORE_CONTENTS % (distro, ROS_ROBOT_PACKAGE[distro]))
-            elif config=='perception':
-                dockerfile.write(DOCKER_CORE_CONTENTS % (distro, ROS_PERCEPTION_PACKAGE[distro]))
-            elif config=='desktop':
-                dockerfile.write(DOCKER_CORE_CONTENTS % (distro, ROS_DESKTOP_PACKAGE[distro]))
-            elif config=='desktop-full':
-                dockerfile.write(DOCKER_CORE_CONTENTS % (distro, ROS_DESKTOP_FULL_PACKAGE[distro]))
-        '''
         return
     else:
         print("ros: version %s not supported. Options: %s" % (version, versions))

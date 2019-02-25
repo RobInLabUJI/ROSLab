@@ -36,15 +36,28 @@ def write_docker_file(yaml_file):
 
         if 'ubuntu' in base.keys():
             import components.ubuntu
-            version = base['ubuntu']
+            ubuntu = components.ubuntu.canonic_version(base['ubuntu'])
             if 'opengl' in base.keys():
                 opengl = base['opengl']
             else:
                 opengl = None
-            components.ubuntu.write(DOCKER_FILE, version, opengl)
+            components.ubuntu.write(DOCKER_FILE, ubuntu, opengl)
 
         import components.jupyterlab
         components.jupyterlab.write(DOCKER_FILE)
+
+        if 'cuda' in base.keys():
+            import components.cuda
+            version = base['cuda']
+            components.cuda.write(DOCKER_FILE, version, ubuntu)
+
+        if 'cudnn' in  base.keys():
+            if not 'cuda' in  base.keys():
+                print('cudnn: cuda must be specified for using cudnn')
+                sys.exit(1)
+            import components.cudnn
+            version = base['cudnn']
+            components.cudnn.write(DOCKER_FILE, version, base['cuda'], ubuntu)
 
         if 'ros' in base.keys():
             import components.ros
@@ -81,6 +94,11 @@ def write_docker_file(yaml_file):
 
         import components.copy
         components.copy.write(DOCKER_FILE)
+
+        if 'custom' in yaml_file.keys():
+            import components.custom
+            custom_commands = yaml_file['custom']
+            components.custom.write(DOCKER_FILE, custom_commands)
 
         import components.tail
         components.tail.write(DOCKER_FILE)
