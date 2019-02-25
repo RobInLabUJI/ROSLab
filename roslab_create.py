@@ -118,7 +118,7 @@ def write_build_script(yaml_file):
 RUN_SCRIPT   = """#!/bin/sh
 docker run --rm %s -p 8888:8888 %s"""
 
-RUN_SCRIPT_OPENGL = """#!/bin/sh
+RUN_SCRIPT_NVIDIA = """#!/bin/sh
 XAUTH=/tmp/.docker.xauth
 if [ ! -f $XAUTH ]
 then
@@ -146,8 +146,8 @@ def write_run_script(yaml_file):
         for v in yaml_file['volume']:
             vol_string += '--volume="%s:%s:%s" ' % (v['host_path'], v['container_path'], v['options'])
     with open(RUN_FILE, "w") as scriptfile:
-        if 'opengl' in yaml_file['base'].keys():
-            scriptfile.write(RUN_SCRIPT_OPENGL % (vol_string, yaml_file['name']))
+        if 'opengl' in yaml_file['base'].keys() or 'cuda' in yaml_file['base'].keys():
+            scriptfile.write(RUN_SCRIPT_NVIDIA % (vol_string, yaml_file['name']))
         else:
             scriptfile.write(RUN_SCRIPT % (vol_string, yaml_file['name']))
     os.chmod(RUN_FILE, 0o755)
