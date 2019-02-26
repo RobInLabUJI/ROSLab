@@ -65,6 +65,11 @@ def write_docker_file(yaml_file):
             components.ros.write(DOCKER_FILE, version)
             components.ros.entry_point()
 
+        if 'cmake_update' in base.keys():
+            import components.cmake_update
+            version = base['cmake_update']
+            components.cmake_update.write(DOCKER_FILE, version)
+
         if 'apt' in yaml_file.keys():
             import components.apt
             package_list = yaml_file['apt']
@@ -94,6 +99,10 @@ def write_docker_file(yaml_file):
 
         import components.copy
         components.copy.write(DOCKER_FILE)
+
+        if 'build' in yaml_file.keys() and yaml_file['build'] == 'cmake':
+            import components.cmake
+            components.cmake.write(DOCKER_FILE)
 
         if 'custom' in yaml_file.keys():
             import components.custom
