@@ -5,11 +5,11 @@ RUN chown -R ${NB_UID} ${HOME}
 
 USER ${NB_USER}
 
-WORKDIR ${HOME}
+WORKDIR ${HOME}/%s
 """
 
-def write(DOCKER_FILE):
+def write(DOCKER_FILE, name):
     with open(DOCKER_FILE, "a") as dockerfile:
-        dockerfile.write(DOCKER_CONTENTS)
+        dockerfile.write(DOCKER_CONTENTS % name)
     return
 

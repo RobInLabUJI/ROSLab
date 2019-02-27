@@ -1,8 +1,8 @@
 DOCKER_CONTENTS = """
 ##################################### APT ######################################
 
-RUN apt-get update \\
- && apt-get install -yq --no-install-recommends \\
+RUN apt-get -o Acquire::ForceIPv4=true update \\
+ && apt-get -o Acquire::ForceIPv4=true install -yq --no-install-recommends \\
 %s && apt-get clean \\
  && rm -rf /var/lib/apt/lists/*
 """

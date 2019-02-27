@@ -33,6 +33,7 @@ def read_yaml_file():
 def write_docker_file(yaml_file):
     try:
         base = yaml_file['base']
+        name = yaml_file['name']
 
         if 'ubuntu' in base.keys():
             import components.ubuntu
@@ -90,19 +91,19 @@ def write_docker_file(yaml_file):
             package_list = yaml_file['source']
             components.source.write(DOCKER_FILE, package_list)
 
+        import components.copy
+        components.copy.write(DOCKER_FILE, name)
+
         if 'build' in yaml_file.keys():
             build_method = yaml_file['build']
             if build_method == 'catkin_make' or build_method == 'catkin_build':
                 import components.catkin
-                name = yaml_file['name']
                 components.catkin.write(DOCKER_FILE, name, build_method)
-
-        import components.copy
-        components.copy.write(DOCKER_FILE)
-
-        if 'build' in yaml_file.keys() and yaml_file['build'] == 'cmake':
-            import components.cmake
-            components.cmake.write(DOCKER_FILE)
+            elif build_method == 'cmake':
+                import components.cmake
+                components.cmake.write(DOCKER_FILE)
+            else:
+                print('Unknown build method: %s, supported methods: %s' % (build_method, ['catkin_make', 'catkin_build', 'cmake']))
 
         if 'custom' in yaml_file.keys():
             import components.custom
@@ -110,7 +111,7 @@ def write_docker_file(yaml_file):
             components.custom.write(DOCKER_FILE, custom_commands)
 
         import components.tail
-        components.tail.write(DOCKER_FILE)
+        components.tail.write(DOCKER_FILE, name)
 
     except KeyError as e:
         print("Key %s not found in file %s" % (e, PROJECT_FILE) )
