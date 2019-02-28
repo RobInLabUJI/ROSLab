@@ -1,6 +1,6 @@
 # ROSLab
 
-## JupyterLab for RObotics Software
+## *RO*botics *S*oftware with Jupyter*Lab*
 
 ROSLab is a [JupyterLab](https://jupyterlab.readthedocs.io/en/stable/)
 environment for a source code repository with robotics software. 
@@ -16,15 +16,15 @@ from a configuration YAML file (`roslab.yaml`) with the following information:
   - ros: `kinetic-ros-core` | `kinetic-ros-base` | `kinetic-robot` | `kinetic-perception` | `kinetic-desktop` | `kinetic-desktop-full` | `melodic-ros-core` | `melodic-ros-base` | `melodic-robot` | `melodic-perception` | `melodic-desktop` | `melodic-desktop-full`
   - build: `catkin_make` | `catkin_build`
 
-- apt (optional): a list of debian packages to be installed in the docker image
-- pip (optional): a list of Python2 packages to be installed in the docker image
-- pip3 (optional): a list of Python3 packages to be installed in the docker image
-- source (optional): a list of source packages to be downloaded, compiled, and installed in the docker image
-    - name: name of the package
-    - repo: git repository
-    - depends (optional): list of debian packages with dependencies for this package
+- apt a list of apt packages to install
+- pip: a list of Python2 packages to install
+- pip3: a list of Python3 packages to install
+- source: a list of source code repositories to download, compile, and install
+    - name: name of the repository
+    - repo: address of the git repository
+    - depends (optional): list of apt packages with dependencies for this repository
     - build: `cmake` | `catkin_make` | `catkin_build`
-- volume (optional): list of directories to be mounted in the docker image
+- volume: list of directories to be mounted in the docker image
     - host_path: full path in the host
     - container_path: full path in the container
     - options: `ro` | `rw`
@@ -34,7 +34,7 @@ from a configuration YAML file (`roslab.yaml`) with the following information:
 
 [Docker](https://www.docker.com/)
 
-[nvidia-docker 2.0](https://github.com/nvidia/nvidia-docker/wiki/Installation-(version-2.0)) For running an image with the `nvidia` runtime.
+[nvidia-docker 2.0](https://github.com/nvidia/nvidia-docker/wiki/Installation-(version-2.0)) For running an image with `OpenGL` and/or `CUDA`.
 
 ## Usage
 
