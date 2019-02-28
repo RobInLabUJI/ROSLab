@@ -1,27 +1,34 @@
 # ROSLab
 
-## JupyterLab for ROS
+## JupyterLab for RObotics Software
 
 ROSLab is a [JupyterLab](https://jupyterlab.readthedocs.io/en/stable/)
-environment for your [ROS](http://www.ros.org/) repository. 
+environment for a source code repository with robotics software. 
 It automatically creates a dockerfile
 from a configuration YAML file (`roslab.yaml`) with the following information:
 
 - name: the name of the docker image
-- distro: `kinetic` | `lunar` | `melodic`
-- build: `catkin_make` | `catkin_build`
-- runtime (optional): `nvidia` (for 3D acceleration)
-- packages (optional): a list of debian packages to be installed in the docker image
-- python-packages (optional): a list of pip packages to be installed in the docker image
+- base:
+  - ubuntu: `16.04` | `18.04`
+  - opengl: `runtime` | `devel`
+  - cuda: `8.0-runtime` | `8.0-devel` | `9.0-runtime` | `9.0-devel` | `10.0-runtime` | `10.0-devel`
+  - cudnn: `5-runtime` | `5-devel` | `6-runtime` | `6-devel` | `7-runtime` | `7-devel`
+  - ros: `kinetic-ros-core` | `kinetic-ros-base` | `kinetic-robot` | `kinetic-perception` | `kinetic-desktop` | `kinetic-desktop-full` | `melodic-ros-core` | `melodic-ros-base` | `melodic-robot` | `melodic-perception` | `melodic-desktop` | `melodic-desktop-full`
+  - build: `catkin_make` | `catkin_build`
+
+- apt (optional): a list of debian packages to be installed in the docker image
+- pip (optional): a list of Python2 packages to be installed in the docker image
+- pip3 (optional): a list of Python3 packages to be installed in the docker image
 - source (optional): a list of source packages to be downloaded, compiled, and installed in the docker image
     - name: name of the package
     - repo: git repository
     - depends (optional): list of debian packages with dependencies for this package
-    - build: `cmake` | `catkin_make` 
+    - build: `cmake` | `catkin_make` | `catkin_build`
 - volume (optional): list of directories to be mounted in the docker image
     - host_path: full path in the host
     - container_path: full path in the container
     - options: `ro` | `rw`
+ - custom: list of additional shell commands
     
 ## Prerequisites
 
@@ -36,11 +43,11 @@ $ docker run --rm -v <REPOSITORY_FOLDER>:/project:rw roslab/create
 ```
 
 The command will read the file `roslab.yaml` from your repository folder,
-create the `Dockerfile` in the same folder,
+create the `roslab.dockerfile` in the same folder,
 and convert the markdown file `README.md` into a notebook file named
 `README.ipynb`.
 
-It will also create two script files `docker_build.sh` and `docker_run.sh`
+It will also create two script files `roslab_build.sh` and `roslab_run.sh`
 for building and running the docker image respectively.
 
 After running the image, connect to JupyterLab by opening this URL 
