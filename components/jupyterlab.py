@@ -5,8 +5,8 @@ ENV DEBIAN_FRONTEND noninteractive
 ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
 
-RUN apt-get update && apt-get -yq dist-upgrade \\
- && apt-get install -yq --no-install-recommends \\
+RUN apt-get -o Acquire::ForceIPv4=true update && apt-get -yq dist-upgrade \\
+ && apt-get -o Acquire::ForceIPv4=true install -yq --no-install-recommends \\
 	locales python-pip cmake \\
 	python3-pip python3-setuptools git build-essential \\
  && apt-get clean \\

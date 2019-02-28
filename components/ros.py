@@ -9,7 +9,7 @@ DOCKER_CORE_CONTENTS = """
 ###################################### ROS #####################################
 
 # install packages
-RUN apt-get update && apt-get install -q -y \\
+RUN apt-get -o Acquire::ForceIPv4=true update && apt-get -o Acquire::ForceIPv4=true install -q -y \\
     dirmngr \\
     gnupg2 \\
     lsb-release \\
@@ -22,7 +22,7 @@ RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 421C365BD9
 RUN echo "deb http://packages.ros.org/ros/ubuntu `lsb_release -sc` main" > /etc/apt/sources.list.d/ros-latest.list
 
 # install bootstrap tools
-RUN apt-get update && apt-get install --no-install-recommends -y \\
+RUN apt-get -o Acquire::ForceIPv4=true update && apt-get -o Acquire::ForceIPv4=true install --no-install-recommends -y \\
     python-rosdep \\
     python-rosinstall \\
     python-vcstools \\
@@ -35,7 +35,7 @@ RUN rosdep init \\
 
 # install ros packages
 ENV ROS_DISTRO %s
-RUN apt-get update && apt-get install -y \\
+RUN apt-get -o Acquire::ForceIPv4=true update && apt-get -o Acquire::ForceIPv4=true install -y \\
     %s \\
     && rm -rf /var/lib/apt/lists/*
 
