@@ -14,9 +14,9 @@ from a configuration YAML file (`roslab.yaml`) with the following information:
   - cuda: `8.0-runtime` | `8.0-devel` | `9.0-runtime` | `9.0-devel` | `10.0-runtime` | `10.0-devel`
   - cudnn: `5-runtime` | `5-devel` | `6-runtime` | `6-devel` | `7-runtime` | `7-devel`
   - ros: `kinetic-ros-core` | `kinetic-ros-base` | `kinetic-robot` | `kinetic-perception` | `kinetic-desktop` | `kinetic-desktop-full` | `melodic-ros-core` | `melodic-ros-base` | `melodic-robot` | `melodic-perception` | `melodic-desktop` | `melodic-desktop-full`
-  - build: `catkin_make` | `catkin_build`
-
-- apt a list of apt packages to install
+  
+- build: `cmake` | `catkin_make` | `catkin_build`
+- apt: a list of apt packages to install
 - pip: a list of Python2 packages to install
 - pip3: a list of Python3 packages to install
 - source: a list of source code repositories to download, compile, and install
