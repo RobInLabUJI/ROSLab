@@ -58,17 +58,20 @@ in your browser: `http://localhost:8888/lab/tree/README.ipynb`
 #### [Minimalistic example](https://github.com/ICRA-2018/raspimouse_ros_2/blob/master/roslab.yaml)
 ```
 name: raspimouse-ros
-distro: kinetic
+base: 
+  ubuntu: 16.04
+  ros: kinetic-ros-base
 build: catkin_make
 ```
 
 #### [Typical example with Debian packages](https://github.com/ICRA-2018/nanomap_ros/blob/master/roslab.yaml)
 ```
 name: nanomap_ros
-distro: kinetic
+base:
+  ubuntu: 16.04
+  ros: kinetic-ros-core
 build: catkin_make
-
-packages:
+apt:
   - libeigen3-dev
   - ros-kinetic-cv-bridge
   - ros-kinetic-image-transport
@@ -79,16 +82,18 @@ packages:
 #### [Example with volume and source package](https://github.com/ICRA-2018/VINS-Mono/blob/master/roslab.yaml)
 ```
 name: vins-mono
-distro: kinetic
+base:
+  ubuntu: 16.04
+  ros: kinetic-desktop-full
+  opengl: runtime
 build: catkin_make
-runtime: nvidia
 
 volume:
-  - host_path: /Data/EuRoC_MAV_Dataset
+  - host_path: /DATASETS/EuRoC_MAV_Dataset
     container_path: /EuRoC_MAV_Dataset
     options: ro
 
-packages:
+apt:
   - ros-kinetic-cv-bridge
   - ros-kinetic-tf
   - ros-kinetic-message-filters
