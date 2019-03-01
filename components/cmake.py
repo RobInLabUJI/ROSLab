@@ -1,8 +1,8 @@
 DOCKER_CONTENTS = """
 #################################### CMAKE #####################################
 
-RUN mkdir %s/build \\
- && cd %s/build \\
+RUN mkdir ${HOME}/%s/build \\
+ && cd ${HOME}/%s/build \\
  && cmake .. \\
  && make -j2
 """

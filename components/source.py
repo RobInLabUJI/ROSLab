@@ -16,8 +16,8 @@ RUN git clone %s /%s \\
 BUILD_CMAKE = """
  && mkdir build \\
  && cd build \\
- && cmake %s ../ \\
- && make -j4 install \\"""
+ && cmake %s %s \\
+ && %s \\"""
 
 BUILD_CATKIN_MAKE = """
  && mkdir -p ${HOME}/catkin_ws/src \\
@@ -39,6 +39,9 @@ BUILD_CATKIN_BUILD = """
  && rm -rf /var/lib/apt/lists/* \\
  && /bin/bash -c "source /opt/ros/${ROS_DISTRO}/setup.bash && catkin build" \\"""
 
+KEEP_SOURCE = """
+ && cp -R /%s ${HOME}/. \\"""
+
 DELETE = """
  && rm -fr /%s
 """
@@ -57,7 +60,17 @@ def write(DOCKER_FILE, package_list):
                 cmake_options = p['cmake_options']
             else:
                 cmake_options = ''
-            s += BUILD_CMAKE % cmake_options
+            if 'cmake_folder' in p.keys():
+                cmake_folder = p['cmake_folder']
+            else:
+                cmake_folder = '../'
+            if 'make_command' in p.keys():
+                make_command = p['make_command']
+            else:
+                make_command = 'make -j4 install'
+            s += BUILD_CMAKE % (cmake_options, cmake_folder, make_command)
+            if 'keep_source' in p.keys() and p['keep_source'] == True:
+                s += KEEP_SOURCE % p['name']
         elif p['build'] == 'catkin_build':
             s += BUILD_CATKIN_BUILD % p['name']
         elif p['build'] == 'catkin_make':
