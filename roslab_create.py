@@ -100,8 +100,12 @@ def write_docker_file(yaml_file):
                 import components.catkin
                 components.catkin.write(DOCKER_FILE, name, build_method)
             elif build_method == 'cmake':
+                if 'cmake_options' in yaml_file.keys():
+                    cmake_options = yaml_file['cmake_options']
+                else:
+                    cmake_options = ''
                 import components.cmake
-                components.cmake.write(DOCKER_FILE, name)
+                components.cmake.write(DOCKER_FILE, name, cmake_options)
             else:
                 print('Unknown build method: %s, supported methods: %s' % (build_method, ['catkin_make', 'catkin_build', 'cmake']))
 
