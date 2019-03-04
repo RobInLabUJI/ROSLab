@@ -71,6 +71,11 @@ def write_docker_file(yaml_file):
             version = base['cmake_update']
             components.cmake_update.write(DOCKER_FILE, version)
 
+        if 'repo' in yaml_file.keys():
+            import components.repo
+            repo_list = yaml_file['repo']
+            components.repo.write(DOCKER_FILE, repo_list)
+
         if 'apt' in yaml_file.keys():
             import components.apt
             package_list = yaml_file['apt']
