@@ -41,3 +41,32 @@ def canonic_version(version):
         version = '18.04'
     return version
 
+FASTEST_MIRROR = """
+ENV DEBIAN_FRONTEND noninteractive
+
+RUN apt-get update && apt-get install -y \\
+        wget \\
+    && rm -rf /var/lib/apt/lists/*
+
+RUN wget -q -nv -O- http://ftp.debian.org/debian/pool/main/n/netselect/netselect_0.3.ds1-26_amd64.deb > /tmp/netselect_0.3.ds1-26_amd64.deb
+
+RUN dpkg -i /tmp/netselect_0.3.ds1-26_amd64.deb
+
+RUN netselect -s1 -t20 `wget -q -nv -O- https://launchpad.net/ubuntu/+archivemirrors | grep -P -B8 "statusUP|statusSIX" | grep -o -P "(f|ht)tp.*\\"" | tr '"\\n' '  '` 2>/dev/null | awk '{ print $2 }' > /fastest-mirror
+
+RUN MIRROR=`cat /fastest-mirror` && sed -i "s#http://archive.ubuntu.com/ubuntu/#$MIRROR#g" /etc/apt/sources.list
+"""
+
+def select_fastest_mirror(DOCKER_FILE):
+    with open(DOCKER_FILE, "a") as dockerfile:
+        dockerfile.write(FASTEST_MIRROR)
+
+COUNTRY_MIRROR = """
+RUN sed --in-place --regexp-extended "s/(\/\/)(archive\.ubuntu)/\\1%s.\\2/" /etc/apt/sources.list && \
+	apt-get update && apt-get upgrade --yes
+"""
+
+def select_country_mirror(DOCKER_FILE, country_code):
+    with open(DOCKER_FILE, "a") as dockerfile:
+        dockerfile.write(COUNTRY_MIRROR % country_code)
+

@@ -43,6 +43,8 @@ def write_docker_file(yaml_file):
             else:
                 opengl = None
             components.ubuntu.write(DOCKER_FILE, ubuntu, opengl)
+            #components.ubuntu.select_fastest_mirror(DOCKER_FILE)
+            #components.ubuntu.select_country_mirror(DOCKER_FILE, "es")
 
         import components.jupyterlab
         components.jupyterlab.write(DOCKER_FILE)

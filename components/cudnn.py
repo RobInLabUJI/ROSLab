@@ -10,6 +10,7 @@ DOCKER_RUNTIME_CONTENTS = {}
 DOCKER_RUNTIME_CONTENTS['18.04'] = {}
 DOCKER_RUNTIME_CONTENTS['16.04'] = {}
 DOCKER_RUNTIME_CONTENTS['18.04']['10.0'] = {}
+DOCKER_RUNTIME_CONTENTS['18.04']['9.2'] = {}
 DOCKER_RUNTIME_CONTENTS['16.04']['10.0'] = {}
 DOCKER_RUNTIME_CONTENTS['16.04']['9.0'] = {}
 DOCKER_RUNTIME_CONTENTS['16.04']['8.0'] = {}
@@ -21,6 +22,16 @@ LABEL com.nvidia.cudnn.version="${CUDNN_VERSION}"
 
 RUN apt-get update && apt-get install -y --no-install-recommends \\
             libcudnn7=$CUDNN_VERSION-1+cuda10.0 && \\
+    apt-mark hold libcudnn7 && \\
+    rm -rf /var/lib/apt/lists/*
+"""
+
+DOCKER_RUNTIME_CONTENTS['18.04']['9.2']['7'] = """
+ENV CUDNN_VERSION 7.4.1.5
+LABEL com.nvidia.cudnn.version="${CUDNN_VERSION}"
+
+RUN apt-get update && apt-get install -y --no-install-recommends \\
+            libcudnn7=$CUDNN_VERSION-1+cuda9.2 && \\
     apt-mark hold libcudnn7 && \\
     rm -rf /var/lib/apt/lists/*
 """
@@ -80,6 +91,7 @@ DOCKER_DEVEL_CONTENTS = {}
 DOCKER_DEVEL_CONTENTS['18.04'] = {}
 DOCKER_DEVEL_CONTENTS['16.04'] = {}
 DOCKER_DEVEL_CONTENTS['18.04']['10.0'] = {}
+DOCKER_DEVEL_CONTENTS['18.04']['9.2'] = {}
 DOCKER_DEVEL_CONTENTS['16.04']['10.0'] = {}
 DOCKER_DEVEL_CONTENTS['16.04']['9.0'] = {}
 DOCKER_DEVEL_CONTENTS['16.04']['8.0'] = {}
@@ -92,6 +104,17 @@ LABEL com.nvidia.cudnn.version="${CUDNN_VERSION}"
 RUN apt-get update && apt-get install -y --no-install-recommends \\
             libcudnn7=$CUDNN_VERSION-1+cuda10.0 \\
             libcudnn7-dev=$CUDNN_VERSION-1+cuda10.0 && \\
+    apt-mark hold libcudnn7 && \\
+    rm -rf /var/lib/apt/lists/*
+"""
+
+DOCKER_DEVEL_CONTENTS['18.04']['9.2']['7'] = """
+ENV CUDNN_VERSION 7.4.1.5
+LABEL com.nvidia.cudnn.version="${CUDNN_VERSION}"
+
+RUN apt-get update && apt-get install -y --no-install-recommends \\
+            libcudnn7=$CUDNN_VERSION-1+cuda9.2 \\
+            libcudnn7-dev=$CUDNN_VERSION-1+cuda9.2 && \\
     apt-mark hold libcudnn7 && \\
     rm -rf /var/lib/apt/lists/*
 """
