@@ -1,6 +1,8 @@
 DOCKER_CONTENTS = """
 ##################################### PIP ######################################
 
+RUN pip install --upgrade pip
+
 RUN pip install %s
 """
 

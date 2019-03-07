@@ -1,16 +1,20 @@
-DOCKER_CONTENTS = """
+DOCKER_REPO_HEADER = """
 ##################################### REPO #####################################
+
+RUN apt-get update \\
+ && apt-get install -yq --no-install-recommends \\
+    software-properties-common \\
+ && apt-get clean \\
+ && rm -rf /var/lib/apt/lists/*
 """
-repo_commands = {}
-
-repo_commands['name'] = """
-
+DOCKER_REPO_ADD = """
+RUN apt-add-repository %s
 """
 
 def write(DOCKER_FILE, repo_list):
-    pstr = DOCKER_CONTENTS
+    pstr = DOCKER_REPO_HEADER
     for p in repo_list:
-        pstr += repo_commands[p]
+        pstr += DOCKER_REPO_ADD % p
     with open(DOCKER_FILE, "a") as dockerfile:
         dockerfile.write(pstr)
     return

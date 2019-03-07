@@ -73,6 +73,10 @@ def write_docker_file(yaml_file):
             version = base['cmake_update']
             components.cmake_update.write(DOCKER_FILE, version)
 
+        if 'matlab' in yaml_file.keys():
+            import components.matlab
+            components.matlab.write(DOCKER_FILE)
+
         if 'repo' in yaml_file.keys():
             import components.repo
             repo_list = yaml_file['repo']
@@ -137,7 +141,7 @@ def write_build_script(yaml_file):
     os.chmod(BUILD_FILE, 0o755)
 
 RUN_SCRIPT   = """#!/bin/sh
-docker run --rm %s -p 8888:8888 %s"""
+docker run --rm %s %s -p 8888:8888 %s"""
 
 RUN_SCRIPT_NVIDIA = """#!/bin/sh
 XAUTH=/tmp/.docker.xauth
@@ -159,18 +163,24 @@ docker run --rm \\
     --env="XAUTHORITY=$XAUTH" \\
     --volume="$XAUTH:$XAUTH" \\
     --runtime=nvidia \\
-    %s -p 8888:8888 %s"""
+    %s %s -p 8888:8888 %s"""
 
 def write_run_script(yaml_file):
     vol_string = ""
     if 'volume' in yaml_file.keys():
         for v in yaml_file['volume']:
             vol_string += '--volume="%s:%s:%s" ' % (v['host_path'], v['container_path'], v['options'])
+    if 'matlab' in yaml_file.keys():
+        host_path = yaml_file['matlab']['host_path']
+        mac_address = yaml_file['matlab']['mac_address']
+        mat_string = "-v %s:/usr/local/MATLAB/from-host --mac-address=%s" % (host_path, mac_address)
+    else:
+        mat_string = ""
     with open(RUN_FILE, "w") as scriptfile:
         if 'opengl' in yaml_file['base'].keys() or 'cuda' in yaml_file['base'].keys():
-            scriptfile.write(RUN_SCRIPT_NVIDIA % (vol_string, yaml_file['name']))
+            scriptfile.write(RUN_SCRIPT_NVIDIA % (vol_string, mat_string, yaml_file['name']))
         else:
-            scriptfile.write(RUN_SCRIPT % (vol_string, yaml_file['name']))
+            scriptfile.write(RUN_SCRIPT % (vol_string, mat_string, yaml_file['name']))
     os.chmod(RUN_FILE, 0o755)
 
 DOCKER_IGNORE_FILE = ".dockerignore"
