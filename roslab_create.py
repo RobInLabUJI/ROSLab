@@ -75,7 +75,8 @@ def write_docker_file(yaml_file):
 
         if 'matlab' in yaml_file.keys():
             import components.matlab
-            components.matlab.write(DOCKER_FILE)
+            host_path = yaml_file['matlab']['host_path']
+            components.matlab.write(DOCKER_FILE, host_path)
 
         if 'repo' in yaml_file.keys():
             import components.repo
@@ -173,7 +174,7 @@ def write_run_script(yaml_file):
     if 'matlab' in yaml_file.keys():
         host_path = yaml_file['matlab']['host_path']
         mac_address = yaml_file['matlab']['mac_address']
-        mat_string = "-v %s:/usr/local/MATLAB/from-host --mac-address=%s" % (host_path, mac_address)
+        mat_string = "-v %s:%s -v /usr/local/lib/python3.5/dist-packages/matlab:/usr/local/lib/python3.5/dist-packages/matlab --mac-address=%s" % (host_path, host_path, mac_address)
     else:
         mat_string = ""
     with open(RUN_FILE, "w") as scriptfile:

@@ -8,11 +8,13 @@ RUN apt-get update \\
  && apt-get clean \\
  && rm -rf /var/lib/apt/lists/*
 
-ENV PATH="/usr/local/MATLAB/from-host/bin:${PATH}"
+RUN pip3 install matlab_kernel
+
+ENV PATH="%s/bin:${PATH}"
 """
 
-def write(DOCKER_FILE):
+def write(DOCKER_FILE, host_path):
     with open(DOCKER_FILE, "a") as dockerfile:
-        dockerfile.write(DOCKER_CONTENTS)
+        dockerfile.write(DOCKER_CONTENTS % host_path)
     return
 
