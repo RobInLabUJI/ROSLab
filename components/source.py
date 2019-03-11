@@ -1,3 +1,5 @@
+import sys
+
 DOCKER_SOURCE_HEADER = """
 ################################### SOURCE #####################################
 """
@@ -12,6 +14,12 @@ RUN apt-get -o Acquire::ForceIPv4=true update \\
 CLONE = """
 RUN git clone %s /%s \\
  && cd /%s \\"""
+
+UNZIP = """
+RUN mkdir /%s && cd /%s \\
+ && wget %s \\
+ && unzip %s && rm %s \\
+ && cd %s-%s \\"""
 
 BUILD_CMAKE = """
  && mkdir build \\
@@ -54,7 +62,16 @@ def write(DOCKER_FILE, package_list):
             for apt_pack in p['depends']:
                 pstr += '    ' + apt_pack + ' \\\n'
             s += DEPENDENCIES % pstr
-        s += CLONE % (p['repo'], p['name'], p['name'])
+        if 'repo' in p.keys():
+            s += CLONE % (p['repo'], p['name'], p['name'])
+        elif 'zip' in p.keys():
+            url = p['zip']
+            archive = url.split('/')[-1]
+            version = '.'.join(archive.split('.')[:-1])
+            s += UNZIP % (p['name'], p['name'], url, archive, archive, p['name'], version)
+        else:
+            print('source: cannot get source for package %s' % p['name'])
+            sys.exit(1)
         if p['build'] == 'cmake':
             if 'cmake_options' in p.keys():
                 cmake_options = p['cmake_options']
