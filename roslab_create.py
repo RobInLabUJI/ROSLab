@@ -68,6 +68,11 @@ def write_docker_file(yaml_file):
             components.ros.write(DOCKER_FILE, version)
             components.ros.entry_point()
 
+        if 'icub' in base.keys():
+            import components.icub
+            version = base['icub']
+            components.icub.write(DOCKER_FILE, version)
+
         if 'cmake_update' in base.keys():
             import components.cmake_update
             version = base['cmake_update']
