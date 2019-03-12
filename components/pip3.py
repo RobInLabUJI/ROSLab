@@ -1,6 +1,8 @@
 DOCKER_CONTENTS = """
 ##################################### PIP3 #####################################
 
+RUN pip3 install --upgrade pip
+
 RUN pip3 install %s
 """
 
