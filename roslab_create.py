@@ -147,7 +147,7 @@ def write_build_script(yaml_file):
     os.chmod(BUILD_FILE, 0o755)
 
 RUN_SCRIPT   = """#!/bin/sh
-docker run --rm %s %s -p 8888:8888 %s"""
+docker run --rm %s %s -p 8888:8888 "$@" %s """
 
 RUN_SCRIPT_NVIDIA = """#!/bin/sh
 XAUTH=/tmp/.docker.xauth
@@ -169,7 +169,7 @@ docker run --rm \\
     --env="XAUTHORITY=$XAUTH" \\
     --volume="$XAUTH:$XAUTH" \\
     --runtime=nvidia \\
-    %s %s -p 8888:8888 %s"""
+    %s %s -p 8888:8888 "$@" %s """
 
 def write_run_script(yaml_file):
     vol_string = ""
