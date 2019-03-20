@@ -1,9 +1,9 @@
 DOCKER_CONTENTS = """
 ##################################### PIP ######################################
 
-RUN pip install --upgrade pip
+RUN pip2 install --upgrade pip
 
-RUN pip install %s
+RUN pip2 install %s
 """
 
 def write(DOCKER_FILE, package_list):
