@@ -21,7 +21,7 @@ def read_yaml_file():
     try:
         with open(PROJECT_FILE, 'r') as stream:
             try:
-                yaml_file = yaml.load(stream)
+                yaml_file = yaml.load(stream, Loader=yaml.FullLoader)
             except yaml.YAMLError as e:
                 print(e)
                 sys.exit(1)
