@@ -15,6 +15,9 @@ CLONE = """
 RUN git clone %s /%s \\
  && cd /%s \\"""
 
+CHECKOUT = """
+ && git checkout %s \\"""
+
 UNZIP = """
 RUN mkdir /%s && cd /%s \\
  && wget %s \\
@@ -72,6 +75,8 @@ def write(DOCKER_FILE, package_list):
         else:
             print('source: cannot get source for package %s' % p['name'])
             sys.exit(1)
+        if 'checkout' in p.keys():
+            s += CHECKOUT % p['checkout']
         if p['build'] == 'cmake':
             if 'cmake_options' in p.keys():
                 cmake_options = p['cmake_options']
