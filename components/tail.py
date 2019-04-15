@@ -1,6 +1,8 @@
 DOCKER_CONTENTS = """
 ##################################### TAIL #####################################
 
+RUN chown ${NB_UID} ${HOME}
+ 
 USER ${NB_USER}
 
 WORKDIR ${HOME}/%s
