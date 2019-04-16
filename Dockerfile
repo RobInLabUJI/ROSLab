@@ -1,11 +1,12 @@
-FROM python:3-alpine
+FROM jupyter/base-notebook:latest
 
-RUN pip install pyyaml notedown
+RUN conda install pyyaml
 
-RUN mkdir /project
+RUN conda install -c conda-forge ipywidgets
 
-ADD roslab_create.py /
+ADD roslab_create.py /home/jovyan/
 
-COPY components /components
+COPY components /home/jovyan/components
 
-CMD [ "python", "roslab_create.py", "/project"]
+COPY --chown=1000:1000 CreateDockerFile.ipynb /home/jovyan/
+
