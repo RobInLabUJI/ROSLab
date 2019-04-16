@@ -1,4 +1,5 @@
 # ROSLab
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/RobInLabUJI/ROSLab/web?urlpath=tree%2FCreateDockerImage.ipynb)
 
 ## *RO*botics *S*oftware with Jupyter*Lab*
 
