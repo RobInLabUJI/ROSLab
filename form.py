@@ -192,7 +192,7 @@ def generate_dockerfile(b):
             print('Done!')
             os.rename('roslab.dockerfile', 'Dockerfile')
             display(HTML('<p>It can be downloaded <a href="Dockerfile" target="_blank">from here</a>.</p>'))
-            display(HTML('<p>Put it in your source repository, and build your Docker image with:<br><code>docker build -t %s .</code></p>' % data['name']))
+            display(HTML('<p>1. Put it in your source repository, and build your Docker image with:<br><code>docker build -t %s .</code></p>' % data['name']))
             if opengl.value is 'none' and cuda.value is 'none':
                 docker_command = 'docker'
             else:
@@ -206,8 +206,8 @@ def generate_dockerfile(b):
             else:
                 matlab_string = '-v %s:%s -v /usr/local/lib/python3.5/dist-packages/matlab:/usr/local/lib/python3.5/dist-packages/matlab --mac-address=%s ' % (matlab.value, matlab.value, mac.value)
             run_string = docker_command + ' --rm -p 8888:8888 ' + matlab_string + x11_string + data['name']
-            display(HTML('<p>Run your Docker image with:<br><code>%s</code></p>' % run_string))
-            display(HTML('<p>Open this link in your browser: <a href="http://localhost:8888">http://localhost:8888</a></p>'))
+            display(HTML('<p>2. Run your Docker image with:<br><code>%s</code></p>' % run_string))
+            display(HTML('<p>3. Open this link in your browser: <a href="http://localhost:8888">http://localhost:8888</a></p>'))
 
 generate = Button(
     description='Proceed',
