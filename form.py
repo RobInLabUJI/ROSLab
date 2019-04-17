@@ -1,4 +1,4 @@
-from ipywidgets import Layout, Button, Box, HBox, Text, Textarea, Dropdown, Output, Accordion
+from ipywidgets import Layout, Button, Box, HBox, VBox, Text, Textarea, Dropdown, Output, Accordion
 
 
 def on_value_change(change):
@@ -40,6 +40,14 @@ ubuntu = Dropdown(
     disabled=False
 )
 ubuntu.observe(on_ubuntu_change, names='value')
+
+x11 = Dropdown(
+    options=['no', 'yes'],
+    value='no',
+    description='X11:',
+    disabled=False
+)
+x11.observe(on_value_change, names='value')
 
 opengl = Dropdown(
     options=['none', 'runtime', 'devel'],
@@ -123,6 +131,14 @@ matlab = Text(
 )
 matlab.observe(on_value_change, names='value')
 
+mac = Text(
+    value='',
+    placeholder='MAC address of local host',
+    description=' ',
+    disabled=False
+)
+mac.observe(on_value_change, names='value')
+
 import os, yaml
 from roslab_create import write_docker_file
 from IPython.core.display import display, HTML
@@ -157,7 +173,8 @@ def generate_dockerfile(b):
                 data['custom'] = custom.value.splitlines()
             if not matlab.value is '':
                 data['matlab'] = {}
-                data['matlab']['host_path'] = matlab.value()
+                data['matlab']['host_path'] = matlab.value
+                data['matlab']['mac_address'] = mac.value
             if len(source_list.children) > 0:
                 data['source'] = []
                 for sp in source_list.children:
@@ -175,6 +192,22 @@ def generate_dockerfile(b):
             print('Done!')
             os.rename('roslab.dockerfile', 'Dockerfile')
             display(HTML('<p>It can be downloaded <a href="Dockerfile" target="_blank">from here</a>.</p>'))
+            display(HTML('<p>Put it in your source repository, and build your Docker image with:<br><code>docker build -t %s .</code></p>' % data['name']))
+            if opengl.value is 'none' and cuda.value is 'none':
+                docker_command = 'docker'
+            else:
+                docker_command = 'nvidia-docker'
+            if x11.value is 'no':
+                x11_string = ''
+            else:
+                x11_string = '-e DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix '
+            if matlab.value is '':
+                matlab_string = ''
+            else:
+                matlab_string = '-v %s:%s -v /usr/local/lib/python3.5/dist-packages/matlab:/usr/local/lib/python3.5/dist-packages/matlab --mac-address=%s ' % (matlab.value, matlab.value, mac.value)
+            run_string = docker_command + ' --rm -p 8888:8888 ' + matlab_string + x11_string + data['name']
+            display(HTML('<p>Run your Docker image with:<br><code>%s</code></p>' % run_string))
+            display(HTML('<p>Open this link in your browser: <a href="http://localhost:8888">http://localhost:8888</a></p>'))
 
 generate = Button(
     description='Proceed',
@@ -242,8 +275,8 @@ form_item_layout = Layout(
     justify_content='space-between'
 )
 
-left_items = [name, ubuntu, opengl, cuda, cudnn, ros, build, generate, out]
-mid_items = [apt, pip2, pip3, custom, matlab]
+left_items = [name, ubuntu, x11, opengl, cuda, cudnn, ros, build, generate]
+mid_items = [apt, pip2, pip3, custom, matlab, mac]
 right_items = [add_source, source_list]
 
 left_form = Box(left_items, layout=Layout(
@@ -268,4 +301,4 @@ right_form = Box(right_items, layout=Layout(
     width='36%'
 ))
 out.clear_output()
-ui = HBox([left_form, mid_form, right_form])
+ui = VBox([HBox([left_form, mid_form, right_form]), out])
