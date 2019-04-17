@@ -4,7 +4,7 @@ RUN conda install pyyaml
 
 RUN conda install -c conda-forge ipywidgets
 
-ADD roslab_create.py /home/jovyan/
+ADD form.py roslab_create.py /home/jovyan/
 
 COPY components /home/jovyan/components
 
