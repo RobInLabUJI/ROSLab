@@ -7,7 +7,9 @@ ROSLab is a [JupyterLab](https://jupyterlab.readthedocs.io/en/stable/)
 environment for a source code repository with robotics software. 
 It automatically creates a dockerfile
 from the configuration data entered by the user in a simple web form:
-    
+
+![UI form](ui_form.png "UI form")
+
 ## Prerequisites
 
 [Docker](https://www.docker.com/)
