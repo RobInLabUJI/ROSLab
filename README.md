@@ -41,3 +41,16 @@ When the form is complete, you must press the `Proceed` button and the Dockerfil
 [Docker](https://www.docker.com/)
 
 [nvidia-docker 2.0](https://github.com/nvidia/nvidia-docker/wiki/Installation-(version-2.0)) For running an image with `OpenGL` and/or `CUDA`.
+
+## Usage
+
+Use it in [Binder](https://mybinder.org/v2/gh/RobInLabUJI/ROSLab/web?filepath=CreateDockerFile.ipynb), or in your local host with Docker:
+1. Run in the command line:
+```
+docker run --rm -p 8888:8888 roslab/web:latest
+```
+2. Copy and paste the displayed link in your browser:
+```
+http://127.0.0.1:888?token=...
+```
+3. Open the notebook `CreateDockerFile.ipynb`
