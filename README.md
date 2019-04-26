@@ -23,7 +23,7 @@ A number of options can be selected for the platform:
 In the middle column of the form, you can specify the package dependencies of your software:
 * APT packages
 * Python 2 packages
-* Pythoon 3 packages
+* Python 3 packages
 
 You can also add any custom commands that will be executed at the end of the process, as well as the path
 to a local MATLAB install (for this to work, the guest and host OS must be compatible).
