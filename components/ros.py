@@ -43,6 +43,9 @@ RUN apt-get -o Acquire::ForceIPv4=true update && apt-get -o Acquire::ForceIPv4=t
 COPY ./ros_entrypoint.sh /
 
 ENTRYPOINT ["/ros_entrypoint.sh"]
+
+RUN mkdir -p /home/jovyan/.ros
+RUN chown jovyan.jovyan /home/jovyan/.ros
 """
 
 PACKAGE_VERSION = {'kinetic': '1.3.2-0*',

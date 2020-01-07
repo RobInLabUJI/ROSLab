@@ -209,7 +209,7 @@ def generate_dockerfile(b):
                 matlab_string = ''
             else:
                 matlab_string = '-v %s:%s -v /usr/local/lib/python3.5/dist-packages/matlab:/usr/local/lib/python3.5/dist-packages/matlab --mac-address=%s ' % (matlab.value, matlab.value, mac.value)
-            run_string = docker_command + ' --rm -p 8888:8888 ' + matlab_string + x11_string + data['name']
+            run_string = docker_command + ' run --rm -p 8888:8888 ' + matlab_string + x11_string + data['name']
             display(HTML('<p>2. Run your Docker image with:<br><code>%s</code></p>' % run_string))
             display(HTML('<p>3. Open this link in your browser: <a href="http://localhost:8888">http://localhost:8888</a></p>'))
 
