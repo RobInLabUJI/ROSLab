@@ -41,6 +41,7 @@ RUN apt-get -o Acquire::ForceIPv4=true update && apt-get -o Acquire::ForceIPv4=t
 
 # setup entrypoint
 COPY ./ros_entrypoint.sh /
+RUN chmod a+x /ros_entrypoint.sh
 
 ENTRYPOINT ["/ros_entrypoint.sh"]
 
