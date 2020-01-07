@@ -192,7 +192,9 @@ def generate_dockerfile(b):
             print('Done!')
             os.rename('roslab.dockerfile', 'Dockerfile')
             display(HTML('<p>It can be downloaded <a href="Dockerfile" target="_blank">from here</a>.</p>'))
-            display(HTML('<p>1. Put it in your source repository, and build your Docker image with:<br><code>docker build -t %s .</code></p>' % data['name']))
+            if not ros.value is 'none':
+                    display(HTML('<p>Since you are using ROS, please also download <a href="ros_entrypoint.sh" target="_blank">ros_entrypoint.sh</a>.</p>'))
+            display(HTML('<p>1. Put the downloaded file(s) in your source repository, and build your Docker image with:<br><code>docker build -t %s .</code></p>' % data['name']))
             if opengl.value is 'none' and cuda.value is 'none':
                 docker_command = 'docker'
             else:
