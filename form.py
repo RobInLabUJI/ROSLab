@@ -194,6 +194,8 @@ def generate_dockerfile(b):
             display(HTML('<p>It can be downloaded <a href="Dockerfile" target="_blank">from here</a>.</p>'))
             if not ros.value is 'none':
                     display(HTML('<p>Since you are using ROS, please also download <a href="ros_entrypoint.sh" target="_blank">ros_entrypoint.sh</a>.</p>'))
+                    display(HTML('<p>WARNING: some browsers deactivate the execution permissions of this file. In that case, you shoudl run the following command in a terminal:</p>'))
+                    display(HTML('<p style="font-family:'Lucida Console', monospace">chmod a+x ros_entrypoint.sh</p>'))
             display(HTML('<p>1. Put the downloaded file(s) in your source repository, and build your Docker image with:<br><code>docker build -t %s .</code></p>' % data['name']))
             if opengl.value is 'none' and cuda.value is 'none':
                 docker_command = 'docker'
