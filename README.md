@@ -51,6 +51,6 @@ docker run --rm -p 8888:8888 roslab/web:latest
 ```
 2. Copy and paste the displayed link in your browser:
 ```
-http://127.0.0.1:888?token=...
+http://127.0.0.1:8888?token=...
 ```
 3. Open the notebook `CreateDockerFile.ipynb`
